@@ -1,9 +1,11 @@
 <?php require_once 'inc/header.php';
 
+
 //eğer giriş varsa direkt siteye yönlendirsin.
 if(isset($_SESSION['login'])){
     go(site);
 }
+
 
 ?>
 

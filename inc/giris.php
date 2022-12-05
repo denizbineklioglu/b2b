@@ -2,11 +2,6 @@
 
 require_once '../system/function.php';
 
-//eğer giriş varsa direkt siteye yönlendirsin.
-if($_SESSION['login'] == sha1(md5(IP().$bcode))){
-    go(site);
-}
-
 
 if($_POST){
 

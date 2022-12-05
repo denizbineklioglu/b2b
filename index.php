@@ -1,4 +1,7 @@
-<?php require_once 'inc/header.php'; ?>	
+<?php require_once 'inc/header.php'; 
+
+print_r($_SESSION);
+?>	
 		<!-- WRAPPER START -->
 		<div class="wrapper bg-dark-white">
 
