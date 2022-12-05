@@ -25,7 +25,8 @@ if($query->rowCount()){
 }
 
 ##giriş kontrolleri 
-$loginControl = $db->prepare("SELECT * FROM bayiler WHERE id=:id AND 
+if(isset($_SESSION['login'])){
+    $loginControl = $db->prepare("SELECT * FROM bayiler WHERE id=:id AND 
                 bayi_kodu =:bk");
 $loginControl->execute([':id' => $_SESSION['id'],':bk' => $_SESSION['code']]);
 if($loginControl->rowCount()){
@@ -50,5 +51,7 @@ if($loginControl->rowCount()){
 }else{
     @session_destroy();
 }
+}
+
 
 ?>

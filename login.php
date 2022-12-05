@@ -1,7 +1,7 @@
 <?php require_once 'inc/header.php';
 
 //eğer giriş varsa direkt siteye yönlendirsin.
-if($_SESSION['login'] == sha1(md5(IP().$bcode))){
+if(isset($_SESSION['login'])){
     go(site);
 }
 
@@ -32,8 +32,6 @@ if($_SESSION['login'] == sha1(md5(IP().$bcode))){
 					</div>
 				</div>
 			</div>
-			<!-- HEADING-BANNER END -->
-			<!-- SHOPPING-CART-AREA START -->
 			<div class="login-area  pt-80 pb-80">
 				<div class="container">
 						
