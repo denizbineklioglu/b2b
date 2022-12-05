@@ -1,17 +1,10 @@
 <?php require_once 'inc/header.php'; 
-
-print_r($_SESSION);
 ?>	
-		<!-- WRAPPER START -->
 		<div class="wrapper bg-dark-white">
-
-			<!-- HEADER-AREA START -->
 			<?php require_once 'inc/menu.php'; ?>
-			<!-- HEADER-AREA END -->
-			<!-- Mobile-menu start -->
+
 			<?php require_once 'inc/mobilemenu.php'  ?>
-			<!-- Mobile-menu end -->
-			<!-- HEADING-BANNER START -->
+
 			<div class="heading-banner-area overlay-bg">
 				<div class="container">
 					<div class="row">
@@ -31,8 +24,7 @@ print_r($_SESSION);
 					</div>
 				</div>
 			</div>
-			<!-- HEADING-BANNER END -->
-			<!-- PRODUCT-AREA START -->
+
 			<div class="product-area pt-80 pb-80 product-style-2">
 				<div class="container">
 					<div class="row">
@@ -687,6 +679,4 @@ print_r($_SESSION);
 					</div>
 				</div>
 			</div>
-			<!-- PRODUCT-AREA END -->
-			<!-- FOOTER START -->
 <?php require_once 'inc/footer.php'; ?>
