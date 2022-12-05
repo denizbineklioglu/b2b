@@ -24,5 +24,31 @@ if($query->rowCount()){
     define('baslik',$row->site_baslik);
 }
 
+##giriş kontrolleri 
+$loginControl = $db->prepare("SELECT * FROM bayiler WHERE id=:id AND 
+                bayi_kodu =:bk");
+$loginControl->execute([':id' => $_SESSION['id'],':bk' => $_SESSION['code']]);
+if($loginControl->rowCount()){
+
+    $par = $loginControl->fetch(PDO::FETCH_OBJ);
+
+    if($par->bayi_durum == 1){
+        $bid = $par->id;
+        $bcode = $par->bayi_kodu;
+        $bmail = $par->bayi_mail;    
+        $badi  = $par->bayi_adi;
+        $bgift = $par->bayi_indirim;
+        $btelefon = $par->bayi_telefon;
+        $bfax = $par->bayi_fax;
+        $bvno = $par->bayi_vergino;
+        $bvd  = $par->bayi_vergidairesi; 
+        $bweb = $par->bayi_websitesi;
+        $bstatus = $par->bayi_durum;
+    }else{
+        @session_destroy();
+    }
+}else{
+    @session_destroy();
+}
 
 ?>

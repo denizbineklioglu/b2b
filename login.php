@@ -1,4 +1,11 @@
-<?php require_once 'inc/header.php' ?>
+<?php require_once 'inc/header.php';
+
+//eğer giriş varsa direkt siteye yönlendirsin.
+if($_SESSION['login'] == sha1(md5(IP().$bcode))){
+    go(site);
+}
+
+?>
 
 		<div class="wrapper bg-dark-white">
 
@@ -35,7 +42,7 @@
 							 	<form action="#" method="POST" onsubmit="return false;" id="bayigirisform">
 									<div class="customer-login text-left">
 										<h4 class="title-1 title-border text-uppercase mb-30">Bayi Girisi</h4>
-										<input type="text" placeholder="Bayi Email" name="bayi_mail">
+										<input type="text" placeholder="Bayi Email ya da Bayi Kodu" name="bayi_mail">
 										<input type="password" placeholder="Şifre" name="bayi_sifre">
 										<p><a href="#" class="text-gray">Şifremi Unuttum</a></p>
 										<button type="submit" onclick="loginbutton();" id="loginbuton" class="button-one submit-button mt-15">Giriş</button>

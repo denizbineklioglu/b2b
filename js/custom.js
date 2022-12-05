@@ -56,8 +56,11 @@ function loginbutton(){
                 alert("Lütfen boş alan bırakmayınız.");
                 document.getElementById('registerbuton').disabled = false;
             }else if($.trim(result) == "none"){
-                alert("Bu e postaya ait bir kullanıcı yok.");
+                alert("Bu e postaya veya bayi koduna ait bir kullanıcı yok.");
                 document.getElementById('registerbuton').disabled = false;
+            }else if($.trim(result) == "passive"){
+                alert("Üyeliğiniz pasif durumdadır.");
+                document.getElementById('registerbuton').disabled = false;    
             }else if($.trim(result) == "false"){
                 alert("Email veya şifre hatalı.");
                 document.getElementById('registerbuton').disabled = false;
