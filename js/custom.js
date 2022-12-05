@@ -72,3 +72,41 @@ function loginbutton(){
 
     })
 }
+
+
+function profileupdate(){
+    document.getElementById('profilebutton').disabled = true;
+ 
+     var data = $('#profileform').serialize();
+     $.ajax({
+ 
+         type    : "POST",
+         url     : url + "/inc/profileUpdate.php",                 
+         data    : data, 
+         success : function(result){
+             if($.trim(result) == "empty"){
+ 
+                 alert("Lütfen boş alan bırakmayınız.");
+                 document.getElementById('profilebutton').disabled = false;
+ 
+             }else if($.trim(result) == "format"){
+ 
+                 alert("E Posta formatı hatalı.");
+                 document.getElementById('profilebutton').disabled = false;
+             }else if($.trim(result) == "already"){
+ 
+                 alert("Bu e-posta adına ait bir bayi zaten kayıtlı.");
+                 document.getElementById('profilebutton').disabled = false;
+ 
+             }else if($.trim(result) == "error"){
+ 
+                 alert("Bir hata oluştu.");
+                 document.getElementById('profilebutton').disabled = false;
+ 
+             }else if($.trim(result) == "ok"){
+                 alert("Profiliniz Başarıyla Güncellendi");
+                 window.location.reload();
+             }
+         }
+     })
+ }

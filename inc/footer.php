@@ -153,6 +153,6 @@
 		<script src="js/plugins.js"></script>
 
 		<script src="js/main.js"></script>
-		<script src="js/custom.js"></script>
+		<script src="js/custom.js?v=1"></script>
 	</body>
 </html>

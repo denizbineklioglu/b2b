@@ -1,9 +1,9 @@
 <?php 
 
-require_once './system/function.php';
+require_once 'system/config.php';
 
 session_destroy();
-go(site."/login.php");
+header('Location:'.site."/login.php");
 
 
 ?>
