@@ -5,6 +5,16 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
 }
 
 ?>	
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .pagination {
+        background: transparent!important; 
+        display: flex!important; 
+        padding: 20px!important;
+    }
+
+</style>
 <div class="wrapper bg-dark-white">
 
     <?php require_once 'inc/menu.php'; ?>
@@ -40,9 +50,11 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
 						<div id="cat-treeview"  class="widget-info product-cat boxscrol2">
 							<ul>
 								<li><a href="<?php echo site."/profile.php?process=profile"; ?>"><span>Profil Bilgileri</span></a></li>
+                                <li><a href="<?php echo site."/profile.php?process=changepassword"; ?>"><span>Şifremi Degistir</span></a></li>
+                                <li><a href="<?php echo site."/profile.php?process=logoduzenle"; ?>"><span>Logo Düzenle</span></a></li>
                                 <li><a href="<?php echo site."/profile.php?process=order"; ?>"><span>Siparişlerim</span></a></li>
                                 <li><a href="<?php echo site."/profile.php?process=address"; ?>"><span>Adreslerim</span></a></li>
-                                <li><a href="<?php echo site."/profile.php?process=havale"; ?>"><span>Havale Bildirimlerim</span></a></li>																		
+                                <li><a href="<?php echo site."/profile.php?process=havale"; ?>"><span>Havale Bildirimlerim</span></a></li>																
 								<li><a href="<?php echo site."/cart.php"; ?>"><span>Sepetim</span></a></li>
                                 <li><a href="<?php echo site."/logout.php"; ?>"><span>Çıkış Yap</span></a></li>
 
@@ -56,16 +68,53 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
                         $process = get('process');
                         switch ($process) {
                             case 'order':
+
+                                $orders = $db->prepare("SELECT * FROM siparisler
+                                INNER JOIN durum_kodlari ON durum_kodlari.durum_kodu =
+                                siparisler.siparis_durum
+                                WHERE siparis_bayi =:b");
+                                $orders->execute([':b' => $bcode]);   
+
                                 ?>
                             <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
                                 <div class="product-option mb-30 clearfix">
                                     <ul class="nav d-block shop-tab">
-                                        <li>Siparişlerim</li>
+                                        <li>Siparişlerim (<?php echo $orders->rowCount(); ?>)</li>
                                     </ul>
                                 </div>										                                            
                                 <div class="login-area">
                                     <div class="container">
                                         <div class="row">
+                                            <div class="table">
+                                                <?php                                                     
+                                                    if($orders->rowCount()){                                                                            
+                                                ?>
+                                                    <table class="table table-hover" id="b2btable">
+                                                        <thead>
+                                                            <tr>
+                                                            <th>KOD</th>
+                                                            <th>DURUM</th>
+                                                            <th>TUTAR</th>
+                                                            <th>ÖDEME TÜRÜ</th>
+                                                            <th>TARİH</th>
+                                                            </tr>                                                            
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php 
+                                                                foreach ($orders as $order) { ?>
+                                                                    <tr>
+                                                                        <td><a href="" title="Sipariş Detayı"><?php echo $order['siparis_kod'] ?></a></td>
+                                                                        <td><?php echo $order['durum_baslik'] ?></td>
+                                                                        <td><?php echo $order['siparis_tutar'] ?></td>
+                                                                        <td><?php echo $order['siparis_odeme'] == 1 ? 'Havale' : 'Kredi Kartı'; ?></td>
+                                                                        <td><?php echo dt($order['siparis_tarih']). " | ".dt($order['siparis_saat'],true) ?></td>
+                                                                    </tr>
+                                                               <?php } ?>                                                            
+                                                        </tbody>
+                                                    </table>
+
+                                                <?php }else{ alert('Siparişiniz Bulunmamaktadır.','danger'); } ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>                                                                                              						
@@ -105,14 +154,58 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
                                     </div>                                                                                              						
                                 </div>
                                     <?php
-                                break;    
+                                break;
+                            case 'changepassword' :
+                            ?>
+                            <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
+                                <div class="product-option mb-30 clearfix">
+                                    <ul class="nav d-block shop-tab">
+                                        <li>Şifre Değiştir</li>
+                                    </ul>
+                                </div>										                                             
+                                <div class="login-area">
+                                    <div class="container">
+                                        <div class="row">
+                                        <form action="#" method="POST" onsubmit="return false;" id="passwordform">
+                                                <div class="customer-login">
+                                                 <label>Yeni Şifre </label>   
+                                                <input type="password" name="password" placeholder="Yeni sifre">
+
+                                                <label>Yeni Şifre Tekrar </label>   
+                                                <input type="password" name="password2" placeholder="Yeni sifre tekrar">
+
+                                                <button type="submit" onclick="passwordupdate();" id="passwordbutton" class="button-one submit-button mt-15">SİFRE GÜNCELLE</button>
+                                        </form>        
+                                        </div>
+                                    </div>
+                                </div>                                                                                              						
+                            </div>
+                                <?php
+                                    break;
+                            case 'logoduzenle' :
+                                ?>
+                                <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
+                                    <div class="product-option mb-30 clearfix">
+                                        <ul class="nav d-block shop-tab">
+                                            <li>Logo Düzenle</li>
+                                        </ul>
+                                    </div>										                                             
+                                    <div class="login-area">
+                                        <div class="container">
+                                            <div class="row">
+                                            </div>
+                                        </div>
+                                    </div>                                                                                              						
+                                </div>
+                                    <?php
+                                break;                
                             case 'profile':
                                 ?>
-                        <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
-                            <div class="product-option mb-30 clearfix">
-                                <ul class="nav d-block shop-tab">
-                                    <li>Profil Bilgileri</li>
-                                </ul>
+                            <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
+                                <div class="product-option mb-30 clearfix">
+                                    <ul class="nav d-block shop-tab">
+                                        <li>Profil Bilgileri</li>
+                                    </ul>
                             </div>						
                                 <div class="login-area">
                                     <div class="container">
@@ -161,3 +254,11 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
 	</div>
 </div>
 <?php require_once 'inc/footer.php'; ?>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+    $('#b2btable').DataTable();
+});
+</script>

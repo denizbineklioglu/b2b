@@ -45,6 +45,8 @@ if($_POST){
                 }else{
                     echo 'passive';
                 }
+            }else{
+                echo 'error';
             }
 
         }

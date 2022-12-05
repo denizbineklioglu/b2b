@@ -110,3 +110,36 @@ function profileupdate(){
          }
      })
  }
+
+function passwordupdate(){
+    document.getElementById('passwordbutton').disabled = true;
+ 
+     var data = $('#passwordform').serialize();
+     $.ajax({
+ 
+         type    : "POST",
+         url     : url + "/inc/passwordUpdate.php",                 
+         data    : data, 
+         success : function(result){
+             if($.trim(result) == "empty"){
+ 
+                 alert("Lütfen boş alan bırakmayınız.");
+                 document.getElementById('passwordbutton').disabled = false;
+
+             }else if($.trim(result) == "match"){
+ 
+                 alert("Şifreler Uyuşmadı.");
+                 document.getElementById('passwordbutton').disabled = false;
+
+             }else if($.trim(result) == "error"){
+ 
+                 alert("Bir hata oluştu.");
+                 document.getElementById('passwordbutton').disabled = false;
+ 
+             }else if($.trim(result) == "ok"){
+                 alert("Şifreniz Başarıyla Güncellendi");
+                 window.location.href = url + "/profile.php?process=profile";
+             }
+         }
+     })
+ }
