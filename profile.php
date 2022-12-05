@@ -105,7 +105,7 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
                                                                     <tr>
                                                                         <td><a href="" title="Sipariş Detayı"><?php echo $order['siparis_kod'] ?></a></td>
                                                                         <td><?php echo $order['durum_baslik'] ?></td>
-                                                                        <td><?php echo $order['siparis_tutar'] ?></td>
+                                                                        <td><?php echo $order['siparis_tutar']." TL"?></td>
                                                                         <td><?php echo $order['siparis_odeme'] == 1 ? 'Havale' : 'Kredi Kartı'; ?></td>
                                                                         <td><?php echo dt($order['siparis_tarih']). " | ".dt($order['siparis_saat'],true) ?></td>
                                                                     </tr>
@@ -121,40 +121,113 @@ if($_SESSION['login'] != sha1(md5(IP().$bcode))){
                             </div>
                                 <?php
                                 break;
-                            case 'address':
-                                ?>
-                            <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
-                                <div class="product-option mb-30 clearfix">
-                                    <ul class="nav d-block shop-tab">
-                                        <li>Adreslerim</li>
-                                    </ul>
-                                </div>										                                            
-                                <div class="login-area">
-                                    <div class="container">
-                                        <div class="row">
-                                        </div>
-                                    </div>
-                                </div>                                                                                              						
-                            </div>
-                                <?php
-                                break;
-                            case 'havale' :
-                                ?>
+                                case 'address':
+
+                                    $addresses = $db->prepare("SELECT * FROM bayi_adresler                                    
+                                    WHERE adres_bayi =:b");
+                                    $addresses->execute([':b' => $bcode]);   
+    
+                                    ?>
                                 <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
                                     <div class="product-option mb-30 clearfix">
                                         <ul class="nav d-block shop-tab">
-                                            <li>Havale Bildirimlerim</li>
+                                            <li>Adreslerim (<?php echo $addresses->rowCount(); ?>) | </li>
+                                            <li><a href="">[Yeni Adres Ekle]</a></li>
                                         </ul>
-                                    </div>										                                             
+                                    </div>										                                            
                                     <div class="login-area">
                                         <div class="container">
                                             <div class="row">
+                                                <div class="table">
+                                                    <?php                                                     
+                                                        if($addresses->rowCount()){                                                                            
+                                                    ?>
+                                                        <table class="table table-hover" id="b2btable">
+                                                            <thead>
+                                                                <tr>
+                                                                <th>ID</th>
+                                                                <th>BAŞLIK</th>
+                                                                <th>AÇIK ADRES</th>
+                                                                <th>DURUM</th>                                                                
+                                                                <th>TARİH</th>
+                                                                </tr>                                                            
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php 
+                                                                    foreach ($addresses as $address) { ?>
+                                                                        <tr>
+                                                                            <td><a href="#" title="Adres Düzenle">#<?php echo $address['id'] ?></a></td>
+                                                                            <td><?php echo $address['adres_baslik'] ?></td>
+                                                                            <td><?php echo $address['adres_tarif'] ?></td>
+                                                                            <td><?php echo $address['adres_durum'] == 1 ? 'Aktif' : 'Pasif'; ?></td>
+                                                                            <td><?php echo dt($address['adres_tarih'])?></td>
+                                                                        </tr>
+                                                                   <?php } ?>                                                            
+                                                            </tbody>
+                                                        </table>
+    
+                                                    <?php }else{ alert('Adresiniz Bulunmamaktadır.','danger'); } ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>                                                                                              						
                                 </div>
                                     <?php
-                                break;
+                                    break;
+                                    case 'havale':
+
+                                        $havaleler = $db->prepare("SELECT * FROM havale_bildirim   
+                                        INNER JOIN bankalar ON bankalar.id = havale_bildirim.banka                                 
+                                        WHERE bayi_kodu =:b");
+                                        $havaleler->execute([':b' => $bcode]);   
+        
+                                        ?>
+                                    <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
+                                        <div class="product-option mb-30 clearfix">
+                                            <ul class="nav d-block shop-tab">
+                                                <li>Havale Bildirimlerim (<?php echo $havaleler->rowCount(); ?>) | </li>
+                                                <li><a href="">[Yeni Bildirim Ekle]</a></li>
+                                            </ul>
+                                        </div>										                                            
+                                        <div class="login-area">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="table">
+                                                        <?php                                                     
+                                                            if($havaleler->rowCount()){                                                                            
+                                                        ?>
+                                                            <table class="table table-hover" id="b2btable">
+                                                                <thead>
+                                                                    <tr>
+                                                                    <th>ID</th>
+                                                                    <th>TARİH</th>
+                                                                    <th>TUTAR</th>
+                                                                    <th>BANKA</th>
+                                                                    <th>NOT</th>                                                                                                                                                                                                        
+                                                                    </tr>                                                            
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php 
+                                                                        foreach ($havaleler as $havale) { ?>
+                                                                            <tr>
+                                                                                <td><a href="#" title="Havale Düzenle">#<?php echo $havale['id'] ?></a></td>
+                                                                                <td><?php echo dt($havale['havale_tarih']). " | ".dt($havale['havale_saat'],true)?></td>
+                                                                                <td><?php echo $havale['havale_tutar']." TL" ?></td>
+                                                                                <td><?php echo $havale['banka_adi'] ?></td>
+                                                                                <td><?php echo $havale['havale_not'] ?></td>                                                                                
+                                                                            </tr>
+                                                                       <?php } ?>                                                            
+                                                                </tbody>
+                                                            </table>
+        
+                                                        <?php }else{ alert('Adresiniz Bulunmamaktadır.','danger'); } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                                                                              						
+                                    </div>
+                                        <?php
+                                        break;
                             case 'changepassword' :
                             ?>
                             <div class="shop-content mt-tab-30 mb-30 mb-lg-0">
